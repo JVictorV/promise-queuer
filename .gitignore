@@ -3,6 +3,8 @@
 # Edit at https://www.gitignore.io/?templates=node,webstorm,visualstudiocode
 
 ### Node ###
+lib
+
 # Logs
 logs
 *.log

@@ -2,7 +2,7 @@
   "name": "promise-queuer",
   "version": "0.1.0",
   "description": "A package to manage promises in a queue",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JVictorV/promise-queuer.git"
@@ -11,12 +11,11 @@
     "url": "https://github.com/JVictorV/promise-queuer/issues"
   },
   "homepage": "https://github.com/JVictorV/promise-queuer#readme",
-  "author":
-    {
-      "name": "João Victor Visoná de Oliveira",
-      "email": "joaovictorvisona@gmail.com",
-      "url": "https://github.com/JVictorV/"
-    },
+  "author": {
+    "name": "João Victor Visoná de Oliveira",
+    "email": "joaovictorvisona@gmail.com",
+    "url": "https://github.com/JVictorV/"
+  },
   "contributors": [
     {
       "name": "Eduardo Santos de Brito",
@@ -25,5 +24,16 @@
     }
   ],
   "license": "MIT",
-  "private": false
+  "private": false,
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "start": "node ./lib"
+  },
+  "dependencies": {
+    "typescript": "^3.6.3"
+  },
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  }
 }
