@@ -1,0 +1,29 @@
+{
+  "name": "promise-queuer",
+  "version": "0.1.0",
+  "description": "A package to manage promises in a queue",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JVictorV/promise-queuer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JVictorV/promise-queuer/issues"
+  },
+  "homepage": "https://github.com/JVictorV/promise-queuer#readme",
+  "author":
+    {
+      "name": "João Victor Visoná de Oliveira",
+      "email": "joaovictorvisona@gmail.com",
+      "url": "https://github.com/JVictorV/"
+    },
+  "contributors": [
+    {
+      "name": "Eduardo Santos de Brito",
+      "email": "edu.santos.brito@gmail.com",
+      "url": "https://github.com/EduSantosBrito/"
+    }
+  ],
+  "license": "MIT",
+  "private": false
+}
