@@ -1,5 +1,5 @@
 {
-  "name": "promise-queuer",
+  "name": "@vwp/promise-queuer",
   "version": "0.1.0",
   "description": "A package to manage promises in a queue",
   "main": "./lib/index.js",
