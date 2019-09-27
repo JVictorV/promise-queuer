@@ -1,6 +1,6 @@
 {
   "name": "@vwp/promise-queuer",
-  "version": "0.1.0",
+  "version": "0.1.1-rc2",
   "description": "A package to manage promises in a queue",
   "main": "./lib/index.js",
   "repository": {
@@ -23,17 +23,17 @@
       "url": "https://github.com/EduSantosBrito/"
     }
   ],
+  "files": ["lib"],
   "license": "MIT",
   "private": false,
   "scripts": {
     "dev": "tsc -w",
     "build": "tsc",
-    "start": "node ./lib"
-  },
-  "dependencies": {
-    "typescript": "^3.6.3"
+    "start": "node ./lib",
+    "prepublishOnly": "tsc"
   },
   "devDependencies": {
+    "typescript": "^3.6.3",
     "prettier": "^1.18.2"
   }
 }

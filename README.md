@@ -1,6 +1,8 @@
 <h1 align="center">Welcome to promise-queuer 👋</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-0.1.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://www.npmjs.com/package/@vwp/promise-queuer" target="_blank">
+    <img alt="Version" src="https://img.shields.io/badge/version-0.1.1-blue.svg?cacheSeconds=2592000" />
+  </a>
   <a href="https://github.com/JVictorV/promise-queuer#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
   </a>
@@ -19,7 +21,7 @@
 ## Install
 
 ```sh
-yarn install @vwp/promise-queuer
+yarn add @vwp/promise-queuer
 ```
 
 ## Authors
