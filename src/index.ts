@@ -121,21 +121,3 @@ class PromiseQueuer<T> {
 
 export default PromiseQueuer;
 export { PromiseQueuer };
-
-const resolver = (object: { timeout: number; value: number }): Promise<number> =>
-	new Promise((resolve, reject) => {
-		setTimeout(() => {
-			resolve(object.value);
-		}, object.timeout);
-	});
-
-const callback = (result: any) => {
-	console.log('Callback result: ', result);
-};
-
-const queuer = PromiseQueuer.factory<{ timeout: number; value: number }>(true, 5, 1500);
-
-queuer.addToQueue({ timeout: 1499, value: 1 });
-queuer.addToQueue({ timeout: 1500, value: 2 });
-queuer.addToQueue({ timeout: 1501, value: 3 });
-queuer.runQueue(resolver, callback);
