@@ -1,4 +1,3 @@
-/// <reference path="./@types/declaration.d.ts>
 import { RunQueueFunction, ResolverFunction, CallbackFunction, PromiseObject } from './@types/declarations';
 
 class PromiseQueuer<T> {
@@ -6,15 +5,22 @@ class PromiseQueuer<T> {
 	private readonly debug: boolean;
 	private isRunning: boolean;
 	private readonly maxAttempts: number;
+	private readonly timeout: number;
+	private readonly TIMEOUT_ERROR = 'TIMEOUT_ERROR';
 
-	constructor(debugStatus: boolean, maxAttempts: number) {
+	constructor(debugStatus: boolean, maxAttempts: number, timeout: number) {
 		this.debug = debugStatus;
 		this.isRunning = false;
 		this.maxAttempts = maxAttempts;
+		this.timeout = timeout;
 	}
 
-	public static factory<U>(debugStatus: boolean = false, maxAttempts: number = 5): PromiseQueuer<U> {
-		return new PromiseQueuer<U>(debugStatus, maxAttempts);
+	public static factory<U>(
+		debugStatus: boolean = false,
+		maxAttempts: number = 5,
+		timeout: number = 1500,
+	): PromiseQueuer<U> {
+		return new PromiseQueuer<U>(debugStatus, maxAttempts, timeout);
 	}
 
 	private log(message: any, ...optionalParams: any[]): void {
@@ -57,6 +63,14 @@ class PromiseQueuer<T> {
 		this.queue.push(promiseObject);
 	}
 
+	private executeTimeout(): Promise<void> {
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				reject(this.TIMEOUT_ERROR);
+			}, this.timeout);
+		});
+	}
+
 	public async runQueue(
 		resolver: ResolverFunction<T>,
 		callback?: CallbackFunction,
@@ -77,10 +91,16 @@ class PromiseQueuer<T> {
 			return null;
 		}
 
-		const result = await resolver(nextItem.object).catch(error => {
+		const result = await Promise.race([resolver(nextItem.object), this.executeTimeout()]).catch(error => {
 			if (nextItem.attempts < this.maxAttempts) {
-				this.log('Promise rejected');
-				this.addAttempt(nextItem, error);
+				if (error === this.TIMEOUT_ERROR) {
+					this.log(`Promise timeout reached (limit: ${this.timeout} ms)`);
+					this.addAttempt(nextItem, error);
+					return null;
+				} else {
+					this.log('Promise rejected');
+					this.addAttempt(nextItem, error);
+				}
 			} else {
 				this.log('Promise rejected. Max attempts reached, ignoring item', nextItem);
 			}
@@ -101,3 +121,21 @@ class PromiseQueuer<T> {
 
 export default PromiseQueuer;
 export { PromiseQueuer };
+
+const resolver = (object: { timeout: number; value: number }): Promise<number> =>
+	new Promise((resolve, reject) => {
+		setTimeout(() => {
+			resolve(object.value);
+		}, object.timeout);
+	});
+
+const callback = (result: any) => {
+	console.log('Callback result: ', result);
+};
+
+const queuer = PromiseQueuer.factory<{ timeout: number; value: number }>(true, 5, 1500);
+
+queuer.addToQueue({ timeout: 1499, value: 1 });
+queuer.addToQueue({ timeout: 1500, value: 2 });
+queuer.addToQueue({ timeout: 1501, value: 3 });
+queuer.runQueue(resolver, callback);
