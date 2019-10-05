@@ -1,4 +1,10 @@
-import { RunQueueFunction, ResolverFunction, CallbackFunction, PromiseObject } from './@types/declarations';
+import {
+	RunQueueFunction,
+	ResolverFunction,
+	CallbackFunction,
+	PromiseObject,
+	CallbackErrorFunction,
+} from './@types/declarations';
 
 class PromiseQueuer<T> {
 	private queue: PromiseObject<T>[] = [];
@@ -74,6 +80,7 @@ class PromiseQueuer<T> {
 	public async runQueue(
 		resolver: ResolverFunction<T>,
 		callback?: CallbackFunction,
+		callbackError?: CallbackErrorFunction,
 	): Promise<RunQueueFunction<T> | null> {
 		this.log(`Running Queue with ${this.queue.length} items`);
 
@@ -91,7 +98,7 @@ class PromiseQueuer<T> {
 			return null;
 		}
 
-		const result = await Promise.race([resolver(nextItem.object), this.executeTimeout()]).catch(error => {
+		const result = await Promise.race([resolver(nextItem.object), this.executeTimeout()]).catch(async error => {
 			if (nextItem.attempts < this.maxAttempts) {
 				if (error === this.TIMEOUT_ERROR) {
 					this.log(`Promise timeout reached (limit: ${this.timeout} ms)`);
@@ -103,6 +110,9 @@ class PromiseQueuer<T> {
 				}
 			} else {
 				this.log('Promise rejected. Max attempts reached, ignoring item', nextItem);
+				if (callbackError) {
+					await callbackError(nextItem);
+				}
 			}
 			return null;
 		});
@@ -115,7 +125,7 @@ class PromiseQueuer<T> {
 		}
 
 		this.setQueueStatus(false);
-		return this.runQueue(resolver, callback);
+		return this.runQueue(resolver, callback, callbackError);
 	}
 }
 

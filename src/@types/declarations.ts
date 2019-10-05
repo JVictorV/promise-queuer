@@ -8,6 +8,10 @@ export interface CallbackFunction {
     (params?: any): Promise<any> | any;
 }
 
+export interface CallbackErrorFunction {
+    (params?: any): Promise<any> | any;
+}
+
 export interface ResolverFunction<T> {
     (object: T): Promise<any | Error>;
 }
