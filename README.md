@@ -24,6 +24,83 @@
 yarn add @vwp/promise-queuer
 ```
 
+## Usage
+
+This package works with an array of objects that's consumed in a promise.
+To create a queue, you need to define one type `T` of objects in `PromiseQueuer.factory`
+
+Example:
+```js
+  interface PromiseObject {
+    value: number;
+  }
+  const queuer = PromiseQueuer.factory<PromiseObject>()
+```
+
+The queue has some default properties:
+* debugStatus: `false` 
+  * When true, will enable debug mode, with some `console.log` that will help you to understand the complete flow of `promise-queuer`
+* maxAttempts: `5`
+  * Max times a promise will repeat if fail in queue
+* timeout: `1500`
+  * Timeout in milliseconds, when the promise overtime it, it will be rejected
+
+If you want to override, call the factory like this:
+ ```js
+  interface PromiseObject {
+    value: number;
+  }
+  /* 
+  PromiseQueuer.factory<T>(
+    debugStatus: boolean, 
+    maxAttempts: number, 
+    timeout: number
+  )
+  */
+  const queuer = PromiseQueuer.factory<PromiseObject>(true, 10, 5000)
+ ```
+
+Now you can add objects of type `T` to the queue
+
+Example:
+```js
+  const firstObject: PromiseObject = { value: 1 };
+  const secondObject: PromiseObject = { value: 2 };
+
+  queuer.addToQueue(firstObject);
+  queuer.addToQueue(secondObject);
+```
+
+To run the queuer, just call the method `runQueue` passing the Promise that will consume objects of type `T`
+
+Example: 
+```js
+  const resolver = (object: PromiseQueuer) => new Promise(
+    (resolve, reject) => setTimeout(() => resolve(object.value)
+  , 1500)
+
+  queuer.runQueue(resolver);
+```
+
+The method `runQueue` have another two optional parameters:
+* `callback: (params: any) : Promise<any> | any`
+  * Callback function when PromiseObject is resolved
+* `calbackError: (params: any) : Promise<any> | any`
+  * Callback function when PromiseObject is rejected and dont have more attempts
+
+Example: 
+```js
+  const resolver = (object: PromiseQueuer) => new Promise(
+    (resolve, reject) => setTimeout(() => resolve(object.value)
+  , 1500);
+
+  const callback = (result) => console.log('Callback result:', result);
+
+  const callbackError = (result) => console.log('Callback error result:', result);
+
+  queuer.runQueue(resolver, callback, callbackError);
+```
+
 ## Authors
 
 **João Victor Visoná de Oliveira**
