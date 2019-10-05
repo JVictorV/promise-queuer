@@ -1,6 +1,6 @@
 {
   "name": "@vwp/promise-queuer",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A package to manage promises in a queue",
   "main": "./lib/index.js",
   "repository": {
