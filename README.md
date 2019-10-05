@@ -1,7 +1,7 @@
 <h1 align="center">Welcome to promise-queuer 👋</h1>
 <p>
   <a href="https://www.npmjs.com/package/@vwp/promise-queuer" target="_blank">
-    <img alt="Version" src="https://img.shields.io/badge/version-0.1.1-blue.svg?cacheSeconds=2592000" />
+    <img alt="Version" src="https://img.shields.io/badge/version-0.1.5-blue.svg?cacheSeconds=2592000" />
   </a>
   <a href="https://github.com/JVictorV/promise-queuer#readme" target="_blank">
     <img alt="Documentation" src="https://img.shields.io/badge/documentation-yes-brightgreen.svg" />
