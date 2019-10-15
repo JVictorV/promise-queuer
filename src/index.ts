@@ -3,11 +3,11 @@ import {
 	ResolverFunction,
 	CallbackFunction,
 	PromiseObject,
-	CallbackErrorFunction,
 } from './@types/declarations';
 
 class PromiseQueuer<T> {
 	private queue: PromiseObject<T>[] = [];
+	private resolved: any[] = [];
 	private readonly debug: boolean;
 	private isRunning: boolean;
 	private readonly maxAttempts: number;
@@ -80,8 +80,9 @@ class PromiseQueuer<T> {
 	public async runQueue(
 		resolver: ResolverFunction<T>,
 		callback?: CallbackFunction,
-		callbackError?: CallbackErrorFunction,
-	): Promise<RunQueueFunction<T> | null> {
+		callbackError?: CallbackFunction,
+		callbackFinish?: CallbackFunction,
+	): Promise<any[]> {
 		this.log(`Running Queue with ${this.queue.length} items`);
 
 		if (this.getQueueStatus()) {
@@ -95,7 +96,10 @@ class PromiseQueuer<T> {
 		if (!nextItem) {
 			this.log('No items left to run');
 			this.setQueueStatus(false);
-			return null;
+			if(callbackFinish) {
+				await callbackFinish(this.resolved);
+			}
+			return this.resolved;
 		}
 
 		const result = await Promise.race([resolver(nextItem.object), this.executeTimeout()]).catch(async error => {
@@ -119,6 +123,7 @@ class PromiseQueuer<T> {
 
 		if (result) {
 			this.log('Promise resolved: ', result);
+			this.resolved.push(result);
 			if (callback) {
 				await callback(result);
 			}
