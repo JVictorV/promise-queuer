@@ -27,7 +27,7 @@ yarn add @vwp/promise-queuer
 ## Usage
 
 This package works with an array of objects that's consumed in a promise.
-To create a queue, you need to define one type `T` of objects in `PromiseQueuer.factory`
+To create a queue, you need to define a type `T` of objects in `PromiseQueuer.factory`
 
 Example:
 ```js
